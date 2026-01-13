@@ -243,3 +243,56 @@
 .link:hover {
   text-decoration: underline;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* Tablet styles (768px - 1024px) */
+@media (max-width: 1024px) {
+  .card {
+    width: 480px;
+    padding: 40px;
+  }
+}
+
+/* Mobile styles (up to 767px) */
+@media (max-width: 767px) {
+  .page {
+    padding: 16px;
+  }
+
+  .card {
+    width: 345px;
+    padding: 32px 24px;
+    border-radius: 12px;
+    gap: 20px;
+  }
+
+  .heading {
+    height: auto;
+  }
+
+  .heading h3 {
+    font: 700 22px/1.2 "Inter", sans-serif;
+  }
+
+  .form {
+    gap: 20px;
+  }
+
+  .inputGroup {
+    gap: 8px;
+  }
+}
