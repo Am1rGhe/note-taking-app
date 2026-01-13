@@ -101,6 +101,16 @@
   color: #717784;
 }
 
+.passwordHint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 400 12px/1.2 "Inter", sans-serif;
+  color: #717784;
+  letter-spacing: -0.2px;
+  margin-top: 4px;
+}
+
 
 
 .passwordHeader {
