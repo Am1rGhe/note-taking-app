@@ -165,6 +165,9 @@ function Login() {
           <br />
           <hr className={styles.separator} />
         </div>
+        <div className={styles.authRedirect}>
+          No account yet? <a href="/signup">Sign Up</a>
+        </div>
       </div>
     </div>
   );
