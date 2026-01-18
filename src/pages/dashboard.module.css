@@ -1,0 +1,46 @@
+/* Dashboard Layout Styles - Main Container Only */
+
+/* Main Container: Sidebar + Right Side */
+.mainContainer {
+  display: grid;
+  grid-template-columns: 275px 1fr;
+  grid-template-rows: 1fr;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: red;
+}
+
+/* Sidebar - Left Column */
+.sidebar {
+  background-color:white;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 12px 16px;
+}
+
+/* Right Side - Contains Header + Content Container */
+.rightSide {
+  grid-column: 2;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+}
+
+/* Header - Top Row */
+.header {
+  grid-row: 1;
+  /* Contains: Title + Search */
+}
+
+/* Content Container - Bottom Row (Grid for content) */
+.contentContainer {
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  /* This is the div inside with display: grid */
+  /* Will contain: Notes List + Note Detail (for All Notes page) */
+  overflow: hidden;
+}
