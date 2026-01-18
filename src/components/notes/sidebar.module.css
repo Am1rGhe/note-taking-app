@@ -30,6 +30,10 @@
 }
 
 .navItem {
+  border-bottom: 1px solid #e0e4ea;
+}
+
+.navLink {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -38,16 +42,25 @@
   cursor: pointer;
   transition: all 0.2s ease;
   color: #0E121B;
-  border-bottom: 1px solid #e0e4ea;
+  text-decoration: none;
+  width: 100%;
 }
 
-.navItem:hover {
+.navItem:hover .navLink {
   background-color: #F3F5F8;
 }
 
+/* Active Page styles */
+.navItem.active .navLink {
+  background-color: #EBF1FF;  
+}
 
+.navItem.active:hover .navLink {
+  background-color: #EBF1FF;
+  color: #335CFF;
+}
 
-.navItem p {
+.navLink p {
   flex: 1;
   margin: 0;
   padding: 0;
@@ -56,7 +69,13 @@
   color: inherit;
 }
 
-.navItem svg:last-of-type {
+.navLink svg:first-of-type {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.chevron {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
