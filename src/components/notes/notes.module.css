@@ -143,3 +143,136 @@
   background-color: #F9FAFB;
   color: #0E121B;
 }
+
+/* NoteDetail Styles */
+.detailsContainer {
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 100%;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid #E0E4EA;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.detailsContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.detailTitle {
+  margin: 0;
+  font: 700 24px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  letter-spacing: -0.5px;
+  flex: 1;
+}
+
+
+
+.detailMetadata {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 4px 8px;
+  align-items: center;
+  color: #717784;
+  font: 400 14px/1.2 "Inter", sans-serif;
+}
+
+.metadataIcon {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.metadataIcon svg {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.metadataIcon p {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+  white-space: nowrap;
+}
+
+.metadataItem {
+  margin: 0;
+}
+
+.detailContent {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.contentText {
+  margin: 0;
+  font: 400 14px/1.6 "Inter", sans-serif;
+  color: #0E121B;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.detailActions {
+  display: flex;
+  gap: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #E0E4EA;
+  margin-top: auto;
+}
+
+.saveButton {
+  padding: 12px 24px;
+  background-color: #3356FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.saveButton:hover {
+  background-color: #2547D0;
+}
+
+.cancelButton {
+  padding: 12px 24px;
+  background-color: transparent;
+  color: #0E121B;
+  border: 1px solid #CACFD8;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #F3F5F8;
+  border-color: #9CA3AF;
+}
+
+.emptyState {
+  margin: 0;
+  text-align: center;
+  color: #717784;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  padding: 40px 20px;
+}
