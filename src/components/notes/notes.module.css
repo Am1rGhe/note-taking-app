@@ -1,0 +1,145 @@
+
+/* NoteCard Styles */
+.noteCard {
+  display: flex;
+  flex-direction: column;
+  max-height: 250px;
+  background-color: #F3F5F8;
+  padding: 8px;
+  border-bottom: 1px solid #E0E4EA;
+  gap: 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.noteCard:hover{
+  background-color:  #E5E7EB;
+}
+
+.noteTitle {
+  margin: 0;
+  font: 600 16px/1.2 "Inter", sans-serif;
+  letter-spacing: -0.3px;
+}
+
+.noteTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  /* Tags container styles */
+}
+
+.tag {
+  background-color: #E0E4EA;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font: 400 12px/1.2 "Inter", sans-serif;
+}
+
+.noteDate {
+  margin: 0;
+  font: 400 12px/1.2 "Inter", sans-serif;
+  color: #2B303B;
+}
+
+.noteCard.selected {
+  background-color: #E5E7EB;
+}
+
+/* NotesList Styles */
+.notesList {
+  /* List container styles */
+}
+
+/* NoteDetail Styles */
+.noteDetail {
+  /* Detail container styles */
+}
+
+/* SearchBar Styles */
+.searchBar {
+  /* Search bar styles */
+}
+
+/* CreateNoteButton Styles */
+.createNoteButton {
+  /* Button styles */
+}
+
+/* Sidebar Styles */
+.sidebar {
+  background-color: #FFFFFF;
+  border-right: 1px solid #E5E7EB;
+  padding: 24px 16px;
+  height: 100vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* Navigation Menu */
+.navMenu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.navLink {
+  padding: 12px 16px;
+  text-decoration: none;
+  color: #525866;
+  font: 500 14px/1.2 "Inter", sans-serif;
+  border-radius: 8px;
+  transition: all 0.2s;
+  letter-spacing: -0.2px;
+}
+
+.navLink:hover {
+  background-color: #F9FAFB;
+  color: #0E121B;
+}
+
+.navLink.active {
+  background-color: #EBF1FF;
+  color: #3356FF;
+  font-weight: 600;
+}
+
+/* Tags Section */
+.tagsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tagsTitle {
+  font: 600 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.2px;
+}
+
+.tagsList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tagButton {
+  padding: 8px 12px;
+  background-color: transparent;
+  border: none;
+  text-align: left;
+  color: #525866;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: -0.2px;
+}
+
+.tagButton:hover {
+  background-color: #F9FAFB;
+  color: #0E121B;
+}
