@@ -45,25 +45,7 @@
   background-color: #E5E7EB;
 }
 
-/* NotesList Styles */
-.notesList {
-  /* List container styles */
-}
 
-/* NoteDetail Styles */
-.noteDetail {
-  /* Detail container styles */
-}
-
-/* SearchBar Styles */
-.searchBar {
-  /* Search bar styles */
-}
-
-/* CreateNoteButton Styles */
-.createNoteButton {
-  /* Button styles */
-}
 
 /* Sidebar Styles */
 .sidebar {
@@ -276,3 +258,62 @@
   font: 400 14px/1.2 "Inter", sans-serif;
   padding: 40px 20px;
 }
+
+/* ArchiveDeleteButtons Styles */
+.archiveDeleteButtonsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px 20px 0 20px;
+}
+
+.archiveDeleteButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background-color: transparent;
+  border: 1px solid #CACFC8;
+  border-radius: 8px;
+  color: #0E121B;
+  font: 500 14px/1.2 "Inter", sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  letter-spacing: -0.2px;
+  border-radius: 0;
+  text-align: left;
+  width: 100%;
+}
+
+.archiveDeleteButton:hover {
+  background-color: #F3F5F8;
+}
+
+.archiveDeleteButton:active {
+  background-color: #E5E7EB;
+}
+
+/* Delete button specific styles */
+.deleteButton {
+  border: 1px solid #CACFC8;
+}
+
+.deleteButton:hover {
+  background-color: #F3F5F8;
+  border-color: #DC2626;
+}
+
+.archiveDeleteButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.archiveDeleteButton p {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+  font: inherit;
+}
+
+
