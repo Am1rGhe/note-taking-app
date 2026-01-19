@@ -5,10 +5,9 @@
   display: grid;
   grid-template-columns: 275px 1fr;
   grid-template-rows: 1fr;
-  height: 100vh;
+  height: 100%;
   width: 100%;
   overflow: hidden;
-  background-color: red;
 }
 
 /* Sidebar - Left Column */
@@ -19,6 +18,8 @@
   flex-direction: column;
   height: 100vh;
   padding: 12px 16px;
+  border-right: 1px solid #E0E4EA;
+  height: 100%;
 }
 
 /* Right Side - Contains Header + Content Container */
@@ -27,20 +28,212 @@
   display: grid;
   grid-template-rows: auto 1fr;
   overflow: hidden;
+  height: 100%;
 }
 
 /* Header - Top Row */
 .header {
   grid-row: 1;
-  /* Contains: Title + Search */
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  border-bottom: 1px solid #E0E4EA;
+
+}
+
+.headerTitle {
+  font: 700 32px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.5px;
+}
+
+.createButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #3356FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+}
+
+.createButton:hover {
+  background-color: #2547D0;
+}
+
+.createButton:active {
+  background-color: #2547D0;
+}
+
+.createButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+/* Header Right - Search + Settings Wrapper */
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Search Wrapper */
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+}
+
+.searchButton {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  z-index: 1;
+}
+
+.searchButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 16px 12px 48px;
+  border: 1px solid #CACFD8;
+  border-radius: 8px;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  color: #1A1D29;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.searchInput:focus {
+  border-color: #3B82F6;
+}
+
+.searchInput::placeholder {
+  color: #717784;
+}
+
+/* Settings button */
+.settingsButton {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid #CACFD8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.settingsButton:hover {
+  background-color: #F3F5F8;
+  border-color: #9CA3AF;
+}
+
+.settingsButton:active {
+  background-color: #F3F5F8;
+}
+
+.settingsButton svg {
+  width: 24px;
+  height: 24px;
 }
 
 /* Content Container - Bottom Row (Grid for content) */
 .contentContainer {
   grid-row: 2;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
   /* This is the div inside with display: grid */
-  /* Will contain: Notes List + Note Detail (for All Notes page) */
   overflow: hidden;
+  height: 100%;
+  width: 100%;
+  background-color: blue;
 }
+
+.notesList {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding:20px 16px 20px 32px;
+  background-color: white;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet explorer and Edge */
+  border-right: 1px solid #E0E4EA;
+}
+
+.notesList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.createNoteButton {
+  padding: 12px 24px;
+  background-color: #3356FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.createNoteButton:hover {
+  background-color: #2547D0;
+}
+
+
+/* ArchiveDeleteButtons Container */
+.actionButtonsContainer {
+  height: 100%;
+  background-color: #FFFFFF;
+  width: 100%;
+  border: 1px solid #F0F0F0;
+  box-sizing: border-box;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.actionButtonsContainer::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+
+
+/* CREATE A NEW NOTE */
