@@ -6,6 +6,7 @@ export const mockNotes = [
     tags: ["Dev", "React"],
     date: "29 Oct 2024",
     content: "Key performance optimization techniques:\n\n1. Code Splitting\n   - Lazy loading components\n   - Route-based splitting\n\n2. Memoization\n   - React.memo for components\n   - useMemo for expensive calculations\n\n3. Virtual List Implementation\n   - Use react-window for long lists\n   - Only render visible items\n\nTODO: Benchmark current application and identify bottlenecks",
+    archived: false,
   },
   {
     id: 2,
@@ -13,6 +14,7 @@ export const mockNotes = [
     tags: ["Travel", "Personal"],
     date: "28 Oct 2024",
     content: "Planning my trip to Japan:\n\n- Cities to visit: Tokyo, Kyoto, Osaka\n- Must-see temples and shrines\n- Best time to visit: Cherry blossom season\n- Budget planning needed",
+    archived: false,
   },
   {
     id: 3,
@@ -20,6 +22,7 @@ export const mockNotes = [
     tags: ["Cooking", "Recipes"],
     date: "27 Oct 2024",
     content: "My go-to pasta recipes:\n\n1. Carbonara - Classic Italian\n2. Aglio e Olio - Quick and simple\n3. Marinara - Family favorite\n\nNeed to try: Cacio e Pepe",
+    archived: false,
   },
   {
     id: 4,
@@ -27,6 +30,7 @@ export const mockNotes = [
     tags: ["Fitness", "Health"],
     date: "26 Oct 2024",
     content: "This week's workout schedule:\n\nMonday: Upper body\nTuesday: Cardio\nWednesday: Lower body\nThursday: Rest\nFriday: Full body\nSaturday: Yoga\nSunday: Rest",
+    archived: false,
   },
   {
     id: 5,
@@ -34,6 +38,7 @@ export const mockNotes = [
     tags: ["Cooking", "Health"],
     date: "25 Oct 2024",
     content: "Ideas for weekly meal prep:\n\n- Grilled chicken with vegetables\n- Quinoa salad bowls\n- Overnight oats for breakfast\n- Protein smoothies\n\nPrep day: Sunday",
+    archived: false,
   },
   {
     id: 6,
@@ -41,6 +46,7 @@ export const mockNotes = [
     tags: ["Personal"],
     date: "24 Oct 2024",
     content: "Books to read this year:\n\n1. Clean Code by Robert Martin\n2. The Pragmatic Programmer\n3. Design Patterns\n\nCurrently reading: React documentation",
+    archived: true,
   },
   {
     id: 7,
@@ -48,6 +54,7 @@ export const mockNotes = [
     tags: ["Fitness", "Personal"],
     date: "23 Oct 2024",
     content: "My fitness goals for 2025:\n\n- Run a half marathon\n- Build muscle mass\n- Improve flexibility\n- Maintain consistent workout routine",
+    archived: true,
   },
   {
     id: 8,
@@ -55,5 +62,6 @@ export const mockNotes = [
     tags: ["Dev", "TypeScript"],
     date: "22 Oct 2024",
     content: "Learning TypeScript:\n\n- Type annotations vs type inference\n- Interfaces vs types\n- Generics are powerful\n- Need to practice more with union types",
+    archived: false,
   },
 ];
