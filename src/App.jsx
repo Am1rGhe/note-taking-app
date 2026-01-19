@@ -1,17 +1,20 @@
-import { useState } from 'react'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
+
 import Login from './pages/auth/Login'
-import ForgotPassword from './pages/auth/ForgotPassword'
-import ResetPassword from './pages/auth/ResetPassword'
-import Signup from './pages/auth/Signup'
+import Dashboard from "./pages/Dashboard";
+import ArchivedNotes from "./pages/ArchivedNotes";
 
 function App() {
-  
-
   return (
-    <Signup/>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/archived" element={<ArchivedNotes />} />
+        <Route path="/" element={<Login/>}/>
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+export default App;
