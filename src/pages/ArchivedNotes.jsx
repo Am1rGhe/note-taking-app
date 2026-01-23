@@ -1,13 +1,17 @@
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import NoteCard from "../components/notes/NoteCard";
 import Sidebar from "../components/notes/Sidebar";
 import { mockNotes } from "../data/mockNotes";
 import styles from "./dashboard.module.css";
 import NoteDetail from "../components/notes/NoteDetail";
 import notesStyles from "../components/notes/notes.module.css";
+import CreateNoteForm from "../components/notes/CreateNoteForm";
 
 function ArchivedNotes() {
-  const [notes] = useState(mockNotes);
+  const [notes, setNotes] = useState(mockNotes);
+  const location = useLocation();
+  const isArchivedPage = location.pathname === '/archived';
   
   // Filter to show only archived notes
   const archivedNotes = notes.filter(note => note.archived);
@@ -16,8 +20,61 @@ function ArchivedNotes() {
     archivedNotes.length > 0 ? archivedNotes[0].id : null
   );
 
+  const [isCreating, setIsCreating] = useState(false);
+  const [newNote, setNewNote] = useState({
+    title: '',
+    content: '',
+    tags: [],
+    archived: true
+  });
+
   const handleNoteClick = (note) => {
-    setSelectedNoteId(note.id);
+    if (note.id !== 'creating') {
+      setSelectedNoteId(note.id);
+      setIsCreating(false);
+    }
+  };
+
+  const handleCreateClick = () => {
+    setIsCreating(true);
+    setNewNote({
+      title: '',
+      content: '',
+      tags: [],
+      archived: true
+    });
+    setSelectedNoteId('creating');
+  };
+
+  const handleSaveNote = () => {
+    const noteId = Date.now();
+    const finalNote = {
+      id: noteId,
+      title: newNote.title || 'Untitled Note',
+      content: newNote.content,
+      tags: newNote.tags,
+      archived: newNote.archived,
+      date: new Date().toLocaleDateString('en-GB', { 
+        day: 'numeric', 
+        month: 'short', 
+        year: 'numeric' 
+      })
+    };
+
+    setNotes([...notes, finalNote]);
+    setIsCreating(false);
+    setSelectedNoteId(noteId);
+    setNewNote({ title: '', content: '', tags: [], archived: true });
+  };
+
+  const handleCancelCreate = () => {
+    setIsCreating(false);
+    setNewNote({ title: '', content: '', tags: [], archived: true });
+    if (archivedNotes.length > 0) {
+      setSelectedNoteId(archivedNotes[0].id);
+    } else {
+      setSelectedNoteId(null);
+    }
   };
 
   const selectedNote = archivedNotes.find((note) => note.id === selectedNoteId);
@@ -79,18 +136,45 @@ function ArchivedNotes() {
         </div>
         <div className={styles.contentContainer}>
           <div className={styles.notesList}>
-            <button className={styles.createNoteButton}>+ Create New Note</button>
-            {archivedNotes.map((note) => (
-              <NoteCard
-                key={note.id}
-                note={note}
-                onClick={handleNoteClick}
-                isSelected={selectedNoteId === note.id}
-              />
-            ))}
+            <button className={styles.createNoteButton} onClick={handleCreateClick}>
+              + Create New Note
+            </button>
+            {isCreating && (
+              <div
+                className={`${notesStyles.noteCard} ${notesStyles.selected}`}
+                onClick={() => {}} // Prevent click when creating
+              >
+                <h3 className={notesStyles.noteTitle}>Untitled Note</h3>
+              </div>
+            )}
+            {archivedNotes.length > 0 ? (
+              archivedNotes.map((note) => (
+                <NoteCard
+                  key={note.id}
+                  note={note}
+                  onClick={handleNoteClick}
+                  isSelected={selectedNoteId === note.id && !isCreating}
+                />
+              ))
+            ) : (
+              !isCreating && (
+                <div className={notesStyles.emptyState}>
+                  <p>No notes have been archived yet. Move notes here for safekeeping, or create a new note.</p>
+                </div>
+              )
+            )}
           </div>
           <div>
-            <NoteDetail note={selectedNote} />
+            {isCreating ? (
+              <CreateNoteForm
+                newNote={newNote}
+                setNewNote={setNewNote}
+                onSave={handleSaveNote}
+                onCancel={handleCancelCreate}
+              />
+            ) : (
+              <NoteDetail note={selectedNote} />
+            )}
           </div>
           <div className={styles.actionButtonsContainer}>
             <div className={notesStyles.archiveDeleteButtonsContainer}>
