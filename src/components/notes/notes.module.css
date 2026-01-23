@@ -316,4 +316,94 @@
   font: inherit;
 }
 
+/* CreateNoteForm Styles */
+.createTitleInput {
+  width: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  font: 700 24px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  letter-spacing: -0.5px;
+  background-color: transparent;
+  margin-bottom: 8px;
+}
+
+.createTitleInput::placeholder {
+  color: #717784;
+  font-weight: 400;
+}
+
+.createTagsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.createTagsLabel {
+  font: 500 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  letter-spacing: -0.2px;
+}
+
+.createTagsInput {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #CACFD8;
+  border-radius: 8px;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  color: #1A1D29;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.createTagsInput:focus {
+  border-color: #3B82F6;
+}
+
+.createTagsInput::placeholder {
+  color: #717784;
+}
+
+.createStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #717784;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  margin-bottom: 8px;
+}
+
+.createStatusText {
+  color: #717784;
+}
+
+.createStatusValue {
+  color: #717784;
+  font-style: italic;
+}
+
+.createContentTextarea {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  padding: 0;
+  border: none;
+  outline: none;
+  font: 400 14px/1.6 "Inter", sans-serif;
+  color: #0E121B;
+  background-color: transparent;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-bottom: 16px;
+}
+
+.createContentTextarea::placeholder {
+  color: #717784;
+}
+
 
