@@ -1,9 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 
-import Login from './pages/auth/Login'
-import Dashboard from "./pages/Dashboard";
 import ArchivedNotes from "./pages/ArchivedNotes";
+import Login from "./pages/auth/Login";
+import Dashboard from "./pages/Dashboard";
+import TaggedNotes from "./pages/TaggedNotes";
 
 function App() {
   return (
@@ -11,7 +12,8 @@ function App() {
       <Routes>
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/archived" element={<ArchivedNotes />} />
-        <Route path="/" element={<Login/>}/>
+        <Route path="/tags/:tagName" element={<TaggedNotes />} />
+        <Route path="/" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

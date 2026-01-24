@@ -131,6 +131,10 @@
   gap: 5px;
 }
 
+.tagButtonActive {
+  background-color: #EBF1FF;
+}
+
 
 .tagButton:hover {
   background-color: #f9fafb;
