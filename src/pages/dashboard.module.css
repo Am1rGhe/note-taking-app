@@ -234,4 +234,9 @@
   display: none; /* Chrome, Safari, and Opera */
 }
 
+.headerSubtitle{
+  letter-spacing: -0.2px;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+}
 

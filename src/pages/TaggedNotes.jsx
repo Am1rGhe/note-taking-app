@@ -96,9 +96,7 @@ function TaggedNotes() {
         <div className={styles.header}>
           <div>
             <h2 className={styles.headerTitle}>Notes Tagged: {activeTag}</h2>
-            <p className={styles.headerSubtitle}>
-              All notes with the "{activeTag}" tag are shown here.
-            </p>
+            
           </div>
           <div className={styles.headerRight}>
             <div className={styles.searchWrapper}>
@@ -156,6 +154,9 @@ function TaggedNotes() {
             >
               + Create New Note
             </button>
+            <p className={styles.headerSubtitle}>
+              All notes with the "{activeTag}" tag are shown here.
+            </p>
             {isCreating && (
               <div
                 className={`${notesStyles.noteCard} ${notesStyles.selected}`}
