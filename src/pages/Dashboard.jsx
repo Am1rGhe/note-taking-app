@@ -15,9 +15,11 @@ function Dashboard() {
   
   // Filter notes based on archived status
   const activeNotes = notes.filter(note => !note.archived);
+  // Sort so latest created note (highest id) appears first
+  const sortedActiveNotes = [...activeNotes].sort((a, b) => b.id - a.id);
   
   const [selectedNoteId, setSelectedNoteId] = useState(
-    activeNotes.length > 0 ? activeNotes[0].id : null
+    sortedActiveNotes.length > 0 ? sortedActiveNotes[0].id : null
   );
 
   const [isCreating, setIsCreating] = useState(false);
@@ -70,14 +72,14 @@ function Dashboard() {
   const handleCancelCreate = () => {
     setIsCreating(false);
     setNewNote({ title: '', content: '', tags: [], archived: false });
-    if (activeNotes.length > 0) {
-      setSelectedNoteId(activeNotes[0].id);
+    if (sortedActiveNotes.length > 0) {
+      setSelectedNoteId(sortedActiveNotes[0].id);
     } else {
       setSelectedNoteId(null);
     }
   };
 
-  const selectedNote = activeNotes.find((note) => note.id === selectedNoteId);
+  const selectedNote = sortedActiveNotes.find((note) => note.id === selectedNoteId);
 
   return (
     <div className={styles.mainContainer}>
@@ -147,8 +149,8 @@ function Dashboard() {
                 <h3 className={notesStyles.noteTitle}>Untitled Note</h3>
               </div>
             )}
-            {activeNotes.length > 0 ? (
-              activeNotes.map((note) => (
+            {sortedActiveNotes.length > 0 ? (
+              sortedActiveNotes.map((note) => (
                 <NoteCard
                   key={note.id}
                   note={note}

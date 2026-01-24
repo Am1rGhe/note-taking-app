@@ -15,9 +15,11 @@ function ArchivedNotes() {
   
   // Filter to show only archived notes
   const archivedNotes = notes.filter(note => note.archived);
+  // Sort so latest created note (highest id) appears first
+  const sortedArchivedNotes = [...archivedNotes].sort((a, b) => b.id - a.id);
   
   const [selectedNoteId, setSelectedNoteId] = useState(
-    archivedNotes.length > 0 ? archivedNotes[0].id : null
+    sortedArchivedNotes.length > 0 ? sortedArchivedNotes[0].id : null
   );
 
   const [isCreating, setIsCreating] = useState(false);
@@ -70,14 +72,14 @@ function ArchivedNotes() {
   const handleCancelCreate = () => {
     setIsCreating(false);
     setNewNote({ title: '', content: '', tags: [], archived: true });
-    if (archivedNotes.length > 0) {
-      setSelectedNoteId(archivedNotes[0].id);
+    if (sortedArchivedNotes.length > 0) {
+      setSelectedNoteId(sortedArchivedNotes[0].id);
     } else {
       setSelectedNoteId(null);
     }
   };
 
-  const selectedNote = archivedNotes.find((note) => note.id === selectedNoteId);
+  const selectedNote = sortedArchivedNotes.find((note) => note.id === selectedNoteId);
 
   return (
     <div className={styles.mainContainer}>
@@ -147,8 +149,8 @@ function ArchivedNotes() {
                 <h3 className={notesStyles.noteTitle}>Untitled Note</h3>
               </div>
             )}
-            {archivedNotes.length > 0 ? (
-              archivedNotes.map((note) => (
+            {sortedArchivedNotes.length > 0 ? (
+              sortedArchivedNotes.map((note) => (
                 <NoteCard
                   key={note.id}
                   note={note}
