@@ -1,43 +1,46 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import ArchiveConfirmationModal from "../components/modals/ArchiveConfirmationModal";
+import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
+import CreateNoteForm from "../components/notes/CreateNoteForm";
 import NoteCard from "../components/notes/NoteCard";
+import NoteDetail from "../components/notes/NoteDetail";
+import notesStyles from "../components/notes/notes.module.css";
 import Sidebar from "../components/notes/Sidebar";
 import { mockNotes } from "../data/mockNotes";
 import styles from "./dashboard.module.css";
-import NoteDetail from "../components/notes/NoteDetail";
-import notesStyles from "../components/notes/notes.module.css";
-import CreateNoteForm from "../components/notes/CreateNoteForm";
-import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
-import ArchiveConfirmationModal from "../components/modals/ArchiveConfirmationModal";
 
 function Dashboard() {
   const [notes, setNotes] = useState(mockNotes);
   const location = useLocation();
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
-  const isArchivedPage = location.pathname === '/archived';
-  
+  const isArchivedPage = location.pathname === "/archived";
+
   // Filter notes based on archived status
-  const activeNotes = notes.filter(note => !note.archived);
+  const activeNotes = notes.filter((note) => !note.archived);
   // Sort so latest created note (highest id) appears first
   const sortedActiveNotes = [...activeNotes].sort((a, b) => b.id - a.id);
-  
+
   const [selectedNoteId, setSelectedNoteId] = useState(
     sortedActiveNotes.length > 0 ? sortedActiveNotes[0].id : null
   );
 
   const [isCreating, setIsCreating] = useState(false);
   const [newNote, setNewNote] = useState({
-    title: '',
-    content: '',
+    title: "",
+    content: "",
     tags: [],
-    archived: false
+    archived: false,
   });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  // Adding the editing state to the dashboard
+  const [isEditing, setIsEditing] = useState(false);
+  const [editNote, setEditNote] = useState(null);
 
   const handleNoteClick = (note) => {
-    if (note.id !== 'creating') {
+    if (note.id !== "creating") {
       setSelectedNoteId(note.id);
       setIsCreating(false);
     }
@@ -46,38 +49,38 @@ function Dashboard() {
   const handleCreateClick = () => {
     setIsCreating(true);
     setNewNote({
-      title: '',
-      content: '',
+      title: "",
+      content: "",
       tags: [],
-      archived: false  // Dashboard creates active notes
+      archived: false, // Dashboard creates active notes
     });
-    setSelectedNoteId('creating');
+    setSelectedNoteId("creating");
   };
 
   const handleSaveNote = () => {
     const noteId = Date.now();
     const finalNote = {
       id: noteId,
-      title: newNote.title || 'Untitled Note',
+      title: newNote.title || "Untitled Note",
       content: newNote.content,
       tags: newNote.tags,
       archived: newNote.archived,
-      date: new Date().toLocaleDateString('en-GB', { 
-        day: 'numeric', 
-        month: 'short', 
-        year: 'numeric' 
-      })
+      date: new Date().toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      }),
     };
 
     setNotes([...notes, finalNote]);
     setIsCreating(false);
     setSelectedNoteId(noteId);
-    setNewNote({ title: '', content: '', tags: [], archived: false });
+    setNewNote({ title: "", content: "", tags: [], archived: false });
   };
 
   const handleCancelCreate = () => {
     setIsCreating(false);
-    setNewNote({ title: '', content: '', tags: [], archived: false });
+    setNewNote({ title: "", content: "", tags: [], archived: false });
     if (sortedActiveNotes.length > 0) {
       setSelectedNoteId(sortedActiveNotes[0].id);
     } else {
@@ -144,7 +147,42 @@ function Dashboard() {
     setIsArchiveModalOpen(false);
   };
 
-  const selectedNote = sortedActiveNotes.find((note) => note.id === selectedNoteId);
+  const handleStartEdit = () => {
+    if (selectedNote) {
+      setEditNote({ ...selectedNote });
+      setIsEditing(true);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (editNote && selectedNoteId) {
+      setNotes(
+        notes.map((note) =>
+          note.id === selectedNoteId
+            ? {
+                ...editNote,
+                date: new Date().toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }),
+              }
+            : note
+        )
+      );
+      setIsEditing(false);
+      setEditNote(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditNote(null);
+  };
+
+  const selectedNote = sortedActiveNotes.find(
+    (note) => note.id === selectedNoteId
+  );
 
   return (
     <div className={styles.mainContainer}>
@@ -155,7 +193,7 @@ function Dashboard() {
           <h2 className={styles.headerTitle}>All Notes</h2>
           <div className={styles.headerRight}>
             <div className={styles.searchWrapper}>
-              <button 
+              <button
                 className={styles.searchButton}
                 onClick={handleSearchClick}
                 type="button"
@@ -214,7 +252,10 @@ function Dashboard() {
         </div>
         <div className={styles.contentContainer}>
           <div className={styles.notesList}>
-            <button className={styles.createNoteButton} onClick={handleCreateClick}>
+            <button
+              className={styles.createNoteButton}
+              onClick={handleCreateClick}
+            >
               + Create New Note
             </button>
             {isCreating && (
@@ -225,22 +266,23 @@ function Dashboard() {
                 <h3 className={notesStyles.noteTitle}>Untitled Note</h3>
               </div>
             )}
-            {sortedActiveNotes.length > 0 ? (
-              sortedActiveNotes.map((note) => (
-                <NoteCard
-                  key={note.id}
-                  note={note}
-                  onClick={handleNoteClick}
-                  isSelected={selectedNoteId === note.id && !isCreating}
-                />
-              ))
-            ) : (
-              !isCreating && (
-                <div className={notesStyles.emptyState}>
-                  <p>You don't have any notes yet. Start a new note to capture your thoughts and ideas.</p>
-                </div>
-              )
-            )}
+            {sortedActiveNotes.length > 0
+              ? sortedActiveNotes.map((note) => (
+                  <NoteCard
+                    key={note.id}
+                    note={note}
+                    onClick={handleNoteClick}
+                    isSelected={selectedNoteId === note.id && !isCreating}
+                  />
+                ))
+              : !isCreating && (
+                  <div className={notesStyles.emptyState}>
+                    <p>
+                      You don't have any notes yet. Start a new note to capture
+                      your thoughts and ideas.
+                    </p>
+                  </div>
+                )}
           </div>
           <div>
             {isCreating ? (
@@ -251,7 +293,15 @@ function Dashboard() {
                 onCancel={handleCancelCreate}
               />
             ) : (
-              <NoteDetail note={selectedNote} />
+              <NoteDetail 
+                note={selectedNote}
+                isEditing={isEditing}
+                editNote={editNote}
+                setEditNote={setEditNote}
+                onSave={handleSaveEdit}
+                onCancel={handleCancelEdit}
+                onStartEdit={handleStartEdit}
+              />
             )}
           </div>
           <div className={styles.actionButtonsContainer}>

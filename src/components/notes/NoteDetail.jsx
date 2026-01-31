@@ -1,6 +1,6 @@
 import styles from "./notes.module.css";
 
-function NoteDetail({ note }) {
+function NoteDetail({ note, isEditing = false, editNote, setEditNote, onSave, onCancel, onStartEdit }) {
   if (!note) {
     return (
       <div className={styles.detailsContainer}>
@@ -23,7 +23,17 @@ function NoteDetail({ note }) {
     <div className={styles.detailsContainer}>
       {/* Header */}
       <div className={styles.detailHeader}>
-        <h3 className={styles.detailTitle}>{note.title}</h3>
+        {isEditing ? (
+          <input
+            type="text"
+            className={styles.createTitleInput}
+            value={editNote?.title || ""}
+            onChange={(e) => setEditNote({ ...editNote, title: e.target.value })}
+            placeholder="Enter title..."
+          />
+        ) : (
+          <h3 className={styles.detailTitle}>{note.title}</h3>
+        )}
       </div>
 
       {/* Tags and Date */}
@@ -56,7 +66,21 @@ function NoteDetail({ note }) {
            <p>Tags</p>
          </div>
         <span className={styles.metadataItem}>
-          {note.tags ? note.tags.join(", ") : "None"}
+          {isEditing ? (
+            <input
+              type="text"
+              className={styles.createTagsInput}
+              value={editNote?.tags ? editNote.tags.join(", ") : ""}
+              onChange={(e) => {
+                const tagsString = e.target.value;
+                const tagsArray = tagsString.split(',').map(tag => tag.trim()).filter(tag => tag);
+                setEditNote({ ...editNote, tags: tagsArray });
+              }}
+              placeholder="Enter tags separated by commas..."
+            />
+          ) : (
+            <>{note.tags ? note.tags.join(", ") : "None"}</>
+          )}
         </span>
           <div className={styles.metadataIcon}>
            <svg
@@ -88,13 +112,34 @@ function NoteDetail({ note }) {
 
       {/* Content */}
       <div className={styles.detailContent}>
-        <p className={styles.contentText}>{formattedContent}</p>
+        {isEditing ? (
+          <textarea
+            className={styles.createContentTextarea}
+            value={editNote?.content || ""}
+            onChange={(e) => setEditNote({ ...editNote, content: e.target.value })}
+            placeholder="Enter content..."
+          />
+        ) : (
+          <p className={styles.contentText}>{formattedContent}</p>
+        )}
       </div>
 
       {/* Action Buttons */}
       <div className={styles.detailActions}>
-        <button className={styles.saveButton}>Save Note</button>
-        <button className={styles.cancelButton}>Cancel</button>
+        {!isEditing ? (
+          <button className={styles.saveButton} onClick={() => onStartEdit && onStartEdit()}>
+            Edit
+          </button>
+        ) : (
+          <>
+            <button className={styles.saveButton} onClick={() => onSave && onSave()}>
+              Save Note
+            </button>
+            <button className={styles.cancelButton} onClick={() => onCancel && onCancel()}>
+              Cancel
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

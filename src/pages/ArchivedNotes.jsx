@@ -35,6 +35,8 @@ function ArchivedNotes() {
   });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editNote, setEditNote] = useState(null);
 
   const handleNoteClick = (note) => {
     if (note.id !== 'creating') {
@@ -141,6 +143,39 @@ function ArchivedNotes() {
 
   const handleRestoreCancel = () => {
     setIsRestoreModalOpen(false);
+  };
+
+  const handleStartEdit = () => {
+    if (selectedNote) {
+      setEditNote({ ...selectedNote });
+      setIsEditing(true);
+    }
+  };
+
+  const handleSaveEdit = () => {
+    if (editNote && selectedNoteId) {
+      setNotes(
+        notes.map((note) =>
+          note.id === selectedNoteId
+            ? {
+                ...editNote,
+                date: new Date().toLocaleDateString("en-GB", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                }),
+              }
+            : note
+        )
+      );
+      setIsEditing(false);
+      setEditNote(null);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditNote(null);
   };
 
   const selectedNote = sortedArchivedNotes.find((note) => note.id === selectedNoteId);
@@ -250,7 +285,15 @@ function ArchivedNotes() {
                 onCancel={handleCancelCreate}
               />
             ) : (
-              <NoteDetail note={selectedNote} />
+              <NoteDetail 
+                note={selectedNote}
+                isEditing={isEditing}
+                editNote={editNote}
+                setEditNote={setEditNote}
+                onSave={handleSaveEdit}
+                onCancel={handleCancelEdit}
+                onStartEdit={handleStartEdit}
+              />
             )}
           </div>
           <div className={styles.actionButtonsContainer}>
