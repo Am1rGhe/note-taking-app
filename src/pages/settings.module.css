@@ -1,0 +1,374 @@
+/* Settings Page Styles */
+
+/* Settings menu */
+.settingsMenu {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 16px 20px 32px;
+  background-color: white;
+  border-right: 1px solid #E0E4EA;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.settingsMenu::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+.settingsMenuTitle {
+  font: 700 24px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0 0 24px 0;
+  padding: 0;
+  letter-spacing: -0.5px;
+}
+
+.settingsList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.settingsMenuItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  font: 500 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  text-align: left;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.settingsMenuItem:hover {
+  background-color: #F3F5F8;
+}
+
+.settingsMenuItem.active {
+  background-color: #EBF1FF;
+}
+
+.menuItemIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.menuItemIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.menuItemLabel {
+  flex: 1;
+}
+
+.chevron {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+/* Separator */
+.separator {
+  width: 100%;
+  height: 1px;
+  background-color: #E0E4EA;
+  margin: 16px 0;
+}
+
+/* Logout Button */
+.logoutButton {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background-color: transparent;
+  border: none;
+  border-radius: 8px;
+  font: 500 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  width: 100%;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.logoutButton:hover {
+  background-color: #F3F5F8;
+}
+
+/* Settings Content - Middle Column */
+.settingsContent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 32px;
+  background-color: white;
+  border-right: 1px solid #E0E4EA;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.settingsContent::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
+
+/* Color theme seciton  */
+.colorThemeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.sectionTitle {
+  font: 700 24px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.5px;
+}
+
+.sectionSubtitle {
+  font: 400 14px/1.2 "Inter", sans-serif;
+  color: #717784;
+  margin: 0;
+  padding: 0;
+}
+
+.radioOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.radioOption {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  padding: 16px 48px 16px 16px;
+  border: 1px solid #E0E4EA;
+  border-radius: 8px;
+  transition: all 0.2s;
+  background-color: #FFFFFF;
+  position: relative;
+}
+
+.radioOption:hover {
+  border-color: #CACFD8;
+  background-color: #F9FAFB;
+}
+
+.radioOptionChecked {
+  border-color: #3356FF !important;
+  background-color: #EBF1FF !important;
+}
+
+.radioInput {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  width: 0;
+  height: 0;
+}
+
+/* Custom radio button circle */
+.radioOption::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  border: 2px solid #CACFD8;
+  border-radius: 50%;
+  background-color: #FFFFFF;
+  transition: all 0.2s;
+}
+
+/* When radio is checked show filled circle */
+.radioOptionChecked::after {
+  border-color: #3356FF;
+  background-color: #3356FF;
+  box-shadow: inset 0 0 0 4px #FFFFFF;
+}
+
+.radioContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.radioIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.radioIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.radioText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.radioTitle {
+  font: 600 16px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0;
+  padding: 0;
+}
+
+.radioDescription {
+  font: 400 14px/1.4 "Inter", sans-serif;
+  color: #717784;
+  margin: 0;
+  padding: 0;
+}
+
+.applyButton {
+  align-self: flex-end;
+  padding: 12px 24px;
+  background-color: #3356FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  margin-top: 8px;
+}
+
+.applyButton:hover {
+  background-color: #2547D0;
+}
+
+.applyButton:active {
+  background-color: #2547D0;
+}
+
+/* Password Form Styles */
+.passwordForm {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.inputLabel {
+  font: 500 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0;
+  padding: 0;
+}
+
+.passwordInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordInput {
+  width: 100%;
+  padding: 12px 48px 12px 16px;
+  border: 1px solid #CACFD8;
+  border-radius: 8px;
+  font: 400 14px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  background-color: #FFFFFF;
+  outline: none;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.passwordInput:focus {
+  border-color: #3B82F6;
+}
+
+.passwordInput::placeholder {
+  color: #717784;
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: opacity 0.2s;
+}
+
+.eyeButton:hover {
+  opacity: 0.7;
+}
+
+.eyeButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+.passwordHint {
+  font: 400 12px/1.2 "Inter", sans-serif;
+  color: #717784;
+  margin: 0;
+  padding: 0;
+}
+
+/* Settings Actions - Right Column */
+.settingsActions {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px 32px;
+  background-color: white;
+  overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer and Edge */
+}
+
+.settingsActions::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
