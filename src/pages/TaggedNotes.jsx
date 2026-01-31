@@ -7,6 +7,8 @@ import notesStyles from "../components/notes/notes.module.css";
 import Sidebar from "../components/notes/Sidebar";
 import { mockNotes } from "../data/mockNotes";
 import styles from "./dashboard.module.css";
+import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
+import ArchiveConfirmationModal from "../components/modals/ArchiveConfirmationModal";
 
 function TaggedNotes() {
   const { tagName } = useParams();
@@ -34,6 +36,8 @@ function TaggedNotes() {
     tags: [activeTag],
     archived: false,
   });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
 
   const handleNoteClick = (note) => {
     if (note.id !== "creating") {
@@ -82,6 +86,56 @@ function TaggedNotes() {
     } else {
       setSelectedNoteId(null);
     }
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedNoteId) {
+      setNotes(notes.filter((note) => note.id !== selectedNoteId));
+      setIsDeleteModalOpen(false);
+      const remainingNotes = sortedTaggedNotes.filter(
+        (note) => note.id !== selectedNoteId
+      );
+      if (remainingNotes.length > 0) {
+        setSelectedNoteId(remainingNotes[0].id);
+      } else {
+        setSelectedNoteId(null);
+      }
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleArchiveClick = () => {
+    setIsArchiveModalOpen(true);
+  };
+
+  const handleArchiveConfirm = () => {
+    if (selectedNoteId) {
+      setNotes(
+        notes.map((note) =>
+          note.id === selectedNoteId ? { ...note, archived: true } : note
+        )
+      );
+      setIsArchiveModalOpen(false);
+      const remainingNotes = sortedTaggedNotes.filter(
+        (note) => note.id !== selectedNoteId
+      );
+      if (remainingNotes.length > 0) {
+        setSelectedNoteId(remainingNotes[0].id);
+      } else {
+        setSelectedNoteId(null);
+      }
+    }
+  };
+
+  const handleArchiveCancel = () => {
+    setIsArchiveModalOpen(false);
   };
 
   const selectedNote = sortedTaggedNotes.find(
@@ -197,7 +251,10 @@ function TaggedNotes() {
           </div>
           <div className={styles.actionButtonsContainer}>
             <div className={notesStyles.archiveDeleteButtonsContainer}>
-              <button className={notesStyles.archiveDeleteButton}>
+              <button
+                className={notesStyles.archiveDeleteButton}
+                onClick={handleArchiveClick}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -224,6 +281,7 @@ function TaggedNotes() {
               </button>
               <button
                 className={`${notesStyles.archiveDeleteButton} ${notesStyles.deleteButton}`}
+                onClick={handleDeleteClick}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -246,6 +304,18 @@ function TaggedNotes() {
           </div>
         </div>
       </div>
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        noteTitle={selectedNote?.title || "this note"}
+      />
+      <ArchiveConfirmationModal
+        isOpen={isArchiveModalOpen}
+        onClose={handleArchiveCancel}
+        onConfirm={handleArchiveConfirm}
+        noteTitle={selectedNote?.title || "this note"}
+      />
     </div>
   );
 }
