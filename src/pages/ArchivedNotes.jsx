@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import NoteCard from "../components/notes/NoteCard";
 import Sidebar from "../components/notes/Sidebar";
 import { mockNotes } from "../data/mockNotes";
@@ -7,10 +7,14 @@ import styles from "./dashboard.module.css";
 import NoteDetail from "../components/notes/NoteDetail";
 import notesStyles from "../components/notes/notes.module.css";
 import CreateNoteForm from "../components/notes/CreateNoteForm";
+import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
+import RestoreConfirmationModal from "../components/modals/RestoreConfirmationModal";
 
 function ArchivedNotes() {
   const [notes, setNotes] = useState(mockNotes);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [searchInput, setSearchInput] = useState("");
   const isArchivedPage = location.pathname === '/archived';
   
   // Filter to show only archived notes
@@ -29,6 +33,8 @@ function ArchivedNotes() {
     tags: [],
     archived: true
   });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
 
   const handleNoteClick = (note) => {
     if (note.id !== 'creating') {
@@ -79,6 +85,64 @@ function ArchivedNotes() {
     }
   };
 
+  const handleSearchClick = () => {
+    const trimmedQuery = searchInput.trim();
+    if (trimmedQuery) {
+      navigate(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+    }
+  };
+
+  const handleDeleteClick = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedNoteId) {
+      setNotes(notes.filter((note) => note.id !== selectedNoteId));
+      setIsDeleteModalOpen(false);
+      const remainingNotes = sortedArchivedNotes.filter(
+        (note) => note.id !== selectedNoteId
+      );
+      if (remainingNotes.length > 0) {
+        setSelectedNoteId(remainingNotes[0].id);
+      } else {
+        setSelectedNoteId(null);
+      }
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleRestoreClick = () => {
+    setIsRestoreModalOpen(true);
+  };
+
+  const handleRestoreConfirm = () => {
+    if (selectedNoteId) {
+      setNotes(
+        notes.map((note) =>
+          note.id === selectedNoteId ? { ...note, archived: false } : note
+        )
+      );
+      setIsRestoreModalOpen(false);
+      // Auto-select next note
+      const remainingNotes = sortedArchivedNotes.filter(
+        (note) => note.id !== selectedNoteId
+      );
+      if (remainingNotes.length > 0) {
+        setSelectedNoteId(remainingNotes[0].id);
+      } else {
+        setSelectedNoteId(null);
+      }
+    }
+  };
+
+  const handleRestoreCancel = () => {
+    setIsRestoreModalOpen(false);
+  };
+
   const selectedNote = sortedArchivedNotes.find((note) => note.id === selectedNoteId);
 
   return (
@@ -90,7 +154,11 @@ function ArchivedNotes() {
           <h2 className={styles.headerTitle}>Archived Notes</h2>
           <div className={styles.headerRight}>
             <div className={styles.searchWrapper}>
-              <button className={styles.searchButton}>
+              <button 
+                className={styles.searchButton}
+                onClick={handleSearchClick}
+                type="button"
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -116,6 +184,13 @@ function ArchivedNotes() {
                 type="text"
                 className={styles.searchInput}
                 placeholder="Search by title, content, or tags..."
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleSearchClick();
+                  }
+                }}
               />
             </div>
             <button className={styles.settingsButton}>
@@ -180,7 +255,10 @@ function ArchivedNotes() {
           </div>
           <div className={styles.actionButtonsContainer}>
             <div className={notesStyles.archiveDeleteButtonsContainer}>
-              <button className={notesStyles.archiveDeleteButton}>
+              <button
+                className={notesStyles.archiveDeleteButton}
+                onClick={handleRestoreClick}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -203,7 +281,10 @@ function ArchivedNotes() {
                 </svg>
                 <p>Restore Note</p>
               </button>
-              <button className={`${notesStyles.archiveDeleteButton} ${notesStyles.deleteButton}`}>
+              <button
+                className={`${notesStyles.archiveDeleteButton} ${notesStyles.deleteButton}`}
+                onClick={handleDeleteClick}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -225,6 +306,18 @@ function ArchivedNotes() {
           </div>
         </div>
       </div>
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        noteTitle={selectedNote?.title || "this note"}
+      />
+      <RestoreConfirmationModal
+        isOpen={isRestoreModalOpen}
+        onClose={handleRestoreCancel}
+        onConfirm={handleRestoreConfirm}
+        noteTitle={selectedNote?.title || "this note"}
+      />
     </div>
   );
 }
