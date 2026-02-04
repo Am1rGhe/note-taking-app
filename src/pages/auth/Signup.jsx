@@ -1,15 +1,32 @@
 import { useState } from "react";
 import styles from "./auth.module.css";
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const { signUp } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
-    console.log("Email:", email, "Password:", password);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+
+    try {
+      await signUp(email, password);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Failed to create account');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -49,9 +66,16 @@ function Signup() {
         </div>
         <div className={styles.heading}>
           <h3>Create Your Account</h3>
-          <p>Signup to start orgnizing your notes and boost your productivity</p>
+          <p>
+            Signup to start orgnizing your notes and boost your productivity
+          </p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
+          {error && (
+            <div style={{ color: 'red', marginBottom: '16px', padding: '12px', backgroundColor: '#fee', borderRadius: '8px' }}>
+              {error}
+            </div>
+          )}
           <div className={styles.inputGroup}>
             <label className={styles.label} htmlFor="email">
               Email Address
@@ -65,13 +89,12 @@ function Signup() {
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
-          
+
           <div className={styles.inputGroup}>
-            
-              <label className={styles.label} htmlFor="password">
-                Password
-              </label>
-            
+            <label className={styles.label} htmlFor="password">
+              Password
+            </label>
+
             {/* Add an input wrapper to make the toggle button inside */}
             <div className={styles.inputWrapper}>
               <input
@@ -135,26 +158,30 @@ function Signup() {
             </div>
           </div>
           <div className={styles.passwordHint}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke="#717784"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="1"
-                  d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0ZM12.006 15.693v-4.3M12 8.355v-.063"
-                />
-              </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke="#717784"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1"
+                d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0ZM12.006 15.693v-4.3M12 8.355v-.063"
+              />
+            </svg>
 
-              <span>At least 8 characters</span>
-            </div>
-          <button type="submit" className={styles.button}>
-            Sign up
+            <span>At least 8 characters</span>
+          </div>
+          <button 
+            type="submit" 
+            className={styles.button}
+            disabled={loading}
+          >
+            {loading ? 'Creating account...' : 'Sign up'}
           </button>
         </form>
         <hr className={styles.separator} />
