@@ -1,16 +1,12 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import styles from "./sidebar.module.css";
+import { useNotes } from "../../contexts/NotesContext";
 
 function Sidebar({ className }) {
-  // Temporary tags data
-  const tags = [
-    "Cooking",
-    "Dev",
-    "Fitness",
-    "Health",
-    "Personal",
-    "React",
-  ];
+  const { notes } = useNotes();
+  
+  const allTags = notes.flatMap((note) => note.tags || []);
+  const uniqueTags = [...new Set(allTags)];
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -156,11 +152,11 @@ function Sidebar({ className }) {
         </ul>
       </nav>
       {/* Tags selection  */}
-      {tags.length > 0 && (
+      {uniqueTags.length > 0 && (
         <section className={styles.tagsSection}>
           <h3 className={styles.tagsTitle}>Tags</h3>
           <ul className={styles.tagsList}>
-            {tags.map((tag, index) => {
+            {uniqueTags.map((tag, index) => {
               const isTagActive = activeTag === tag;
               const strokeColor = isTagActive ? "#3356FF" : "#0E121B";
               return (

@@ -235,7 +235,10 @@ function Dashboard() {
                 }}
               />
             </div>
-            <button className={styles.settingsButton}>
+            <button 
+              className={styles.settingsButton}
+              onClick={() => navigate("/settings")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

@@ -9,22 +9,12 @@ export function NotesProvider({ children }) {
   const [notes, setNotes] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch notes from Supabase when user logs in
-  useEffect(() => {
-    if (user) {
-      fetchNotes();
-    } else {
-      setNotes([]);
-      setLoading(false);
-    }
-  }, [user]);
-
-  // Function to fetch notes from Supabase
   const fetchNotes = async () => {
+    if (!user) return;
     try {
       setLoading(true);
       const { data, error } = await supabase
-        .from("notes")
+        .from("note")
         .select("*")
         .eq("user_id", user.id)
         .order("id", { ascending: false });
@@ -38,11 +28,23 @@ export function NotesProvider({ children }) {
     }
   };
 
+  useEffect(() => {
+    if (user) {
+      fetchNotes();
+    } else {
+      setNotes([]);
+      setLoading(false);
+    }
+  }, [user]);
+
   // Create a new note
   const createNote = async (noteData) => {
+    if (!user) {
+      throw new Error("User must be logged in to create notes");
+    }
     try {
       const { data, error } = await supabase
-        .from("notes")
+        .from("note")
         .insert([
           {
             ...noteData,
@@ -64,9 +66,12 @@ export function NotesProvider({ children }) {
 
   // Update an existing note
   const updateNote = async (noteId, updates) => {
+    if (!user) {
+      throw new Error("User must be logged in to update notes");
+    }
     try {
       const { data, error } = await supabase
-        .from("notes")
+        .from("note")
         .update({
           ...updates,
           date: new Date().toISOString(),
@@ -87,9 +92,12 @@ export function NotesProvider({ children }) {
 
   // Delete a note
   const deleteNote = async (noteId) => {
+    if (!user) {
+      throw new Error("User must be logged in to delete notes");
+    }
     try {
       const { error } = await supabase
-        .from("notes")
+        .from("note")
         .delete()
         .eq("id", noteId)
         .eq("user_id", user.id);
@@ -104,9 +112,12 @@ export function NotesProvider({ children }) {
 
   // archive a note
   const archiveNote = async (noteId) => {
+    if (!user) {
+      throw new Error("User must be logged in to archive notes");
+    }
     try {
       const { data, error } = await supabase
-        .from("notes")
+        .from("note")
         .update({ archived: true })
         .eq("id", noteId)
         .eq("user_id", user.id)
@@ -124,9 +135,12 @@ export function NotesProvider({ children }) {
 
   // restore a note
   const restoreNote = async (noteId) => {
+    if (!user) {
+      throw new Error("User must be logged in to restore notes");
+    }
     try {
       const { data, error } = await supabase
-        .from("notes")
+        .from("note")
         .update({ archived: false })
         .eq("id", noteId)
         .eq("user_id", user.id)

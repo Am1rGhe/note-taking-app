@@ -3,9 +3,12 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import Sidebar from "../components/notes/Sidebar";
 import styles from "./dashboard.module.css";
 import settingsStyles from "./settings.module.css";
+import { useAuth } from "../contexts/AuthContext";
+import { supabase } from "../lib/supabase";
 
 function Settings() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedColorTheme, setSelectedColorTheme] = useState("light");
@@ -16,6 +19,9 @@ function Settings() {
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+  const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
   // Get active setting from URL, default to "colorTheme"
   const activeSetting = searchParams.get("tab") || "colorTheme";
 
@@ -28,6 +34,80 @@ function Settings() {
 
   const handleSettingChange = (settingId) => {
     setSearchParams({ tab: settingId });
+  };
+
+  const handleSavePassword = async () => {
+    setPasswordError("");
+    setPasswordSuccess("");
+    
+    // Validation
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      setPasswordError("All fields are required");
+      return;
+    }
+
+    if (newPassword.length < 8) {
+      setPasswordError("New password must be at least 8 characters");
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setPasswordError("New password and confirm password do not match");
+      return;
+    }
+
+    if (oldPassword === newPassword) {
+      setPasswordError("New password must be different from old password");
+      return;
+    }
+
+    // Verify old password by attempting to sign in
+    if (!user?.email) {
+      setPasswordError("User not found. Please log in again.");
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+
+    try {
+      // Verify old password by attempting to sign in
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: oldPassword,
+      });
+
+      if (signInError) {
+        setPasswordError("Old password is incorrect");
+        setIsUpdatingPassword(false);
+        return;
+      }
+
+      // Update password
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (updateError) {
+        setPasswordError(updateError.message || "Failed to update password");
+        setIsUpdatingPassword(false);
+        return;
+      }
+
+      // Success
+      setPasswordSuccess("Password updated successfully!");
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      
+      // Clear success message after 3 seconds
+      setTimeout(() => {
+        setPasswordSuccess("");
+      }, 3000);
+    } catch (error) {
+      setPasswordError(error.message || "An error occurred");
+    } finally {
+      setIsUpdatingPassword(false);
+    }
   };
 
   // Set default tab to "colorTheme" if no tab in URL
@@ -815,8 +895,24 @@ function Settings() {
                   </div>
                 </div>
 
-                <button className={settingsStyles.applyButton}>
-                  Save Password
+                {/* Error/Success Messages */}
+                {passwordError && (
+                  <div style={{ color: "red", marginTop: "1rem", fontSize: "0.875rem" }}>
+                    {passwordError}
+                  </div>
+                )}
+                {passwordSuccess && (
+                  <div style={{ color: "green", marginTop: "1rem", fontSize: "0.875rem" }}>
+                    {passwordSuccess}
+                  </div>
+                )}
+
+                <button 
+                  className={settingsStyles.applyButton}
+                  onClick={handleSavePassword}
+                  disabled={isUpdatingPassword}
+                >
+                  {isUpdatingPassword ? "Updating..." : "Save Password"}
                 </button>
               </div>
             )}

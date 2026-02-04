@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import CreateNoteForm from "../components/notes/CreateNoteForm";
 import NoteCard from "../components/notes/NoteCard";
 import NoteDetail from "../components/notes/NoteDetail";
 import notesStyles from "../components/notes/notes.module.css";
 import Sidebar from "../components/notes/Sidebar";
-import { mockNotes } from "../data/mockNotes";
 import styles from "./dashboard.module.css";
 import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
 import ArchiveConfirmationModal from "../components/modals/ArchiveConfirmationModal";
+import { useNotes } from "../contexts/NotesContext";
 
 function Search() {
+  const { notes, createNote, updateNote, deleteNote, archiveNote } = useNotes();
+  const navigate = useNavigate();
+  
   // ========== STATE DECLARATIONS ==========
-  const [notes, setNotes] = useState(mockNotes);
   const [searchInput, setSearchInput] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,6 +26,8 @@ function Search() {
     tags: [],
     archived: false,
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const [editNote, setEditNote] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
 
@@ -83,6 +87,7 @@ function Search() {
     if (note.id !== "creating") {
       setSelectedNoteId(note.id);
       setIsCreating(false);
+      setIsEditing(false);
     }
   };
 
@@ -97,25 +102,22 @@ function Search() {
     setSelectedNoteId("creating");
   };
 
-  const handleSaveNote = () => {
-    const noteId = Date.now();
-    const finalNote = {
-      id: noteId,
-      title: newNote.title || "Untitled Note",
-      content: newNote.content,
-      tags: newNote.tags,
-      archived: newNote.archived,
-      date: new Date().toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }),
-    };
+  const handleSaveNote = async () => {
+    try {
+      const finalNote = {
+        title: newNote.title || "Untitled Note",
+        content: newNote.content,
+        tags: newNote.tags,
+        archived: newNote.archived,
+      };
 
-    setNotes([...notes, finalNote]);
-    setIsCreating(false);
-    setSelectedNoteId(noteId);
-    setNewNote({ title: "", content: "", tags: [], archived: false });
+      const createdNote = await createNote(finalNote);
+      setIsCreating(false);
+      setSelectedNoteId(createdNote.id);
+      setNewNote({ title: "", content: "", tags: [], archived: false });
+    } catch (error) {
+      console.error("Error creating note:", error);
+    }
   };
 
   const handleCancelCreate = () => {
@@ -132,17 +134,21 @@ function Search() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedNoteId) {
-      setNotes(notes.filter((note) => note.id !== selectedNoteId));
-      setIsDeleteModalOpen(false);
-      const remainingNotes = sortedSearchResults.filter(
-        (note) => note.id !== selectedNoteId
-      );
-      if (remainingNotes.length > 0) {
-        setSelectedNoteId(remainingNotes[0].id);
-      } else {
-        setSelectedNoteId(null);
+      try {
+        await deleteNote(selectedNoteId);
+        setIsDeleteModalOpen(false);
+        const remainingNotes = sortedSearchResults.filter(
+          (note) => note.id !== selectedNoteId
+        );
+        if (remainingNotes.length > 0) {
+          setSelectedNoteId(remainingNotes[0].id);
+        } else {
+          setSelectedNoteId(null);
+        }
+      } catch (error) {
+        console.error("Error deleting note:", error);
       }
     }
   };
@@ -155,27 +161,55 @@ function Search() {
     setIsArchiveModalOpen(true);
   };
 
-  const handleArchiveConfirm = () => {
+  const handleArchiveConfirm = async () => {
     if (selectedNoteId) {
-      setNotes(
-        notes.map((note) =>
-          note.id === selectedNoteId ? { ...note, archived: true } : note
-        )
-      );
-      setIsArchiveModalOpen(false);
-      const remainingNotes = sortedSearchResults.filter(
-        (note) => note.id !== selectedNoteId
-      );
-      if (remainingNotes.length > 0) {
-        setSelectedNoteId(remainingNotes[0].id);
-      } else {
-        setSelectedNoteId(null);
+      try {
+        await archiveNote(selectedNoteId);
+        setIsArchiveModalOpen(false);
+        const remainingNotes = sortedSearchResults.filter(
+          (note) => note.id !== selectedNoteId
+        );
+        if (remainingNotes.length > 0) {
+          setSelectedNoteId(remainingNotes[0].id);
+        } else {
+          setSelectedNoteId(null);
+        }
+      } catch (error) {
+        console.error("Error archiving note:", error);
       }
     }
   };
 
   const handleArchiveCancel = () => {
     setIsArchiveModalOpen(false);
+  };
+
+  const handleStartEdit = () => {
+    if (selectedNote) {
+      setEditNote({ ...selectedNote });
+      setIsEditing(true);
+    }
+  };
+
+  const handleSaveEdit = async () => {
+    if (editNote && selectedNoteId) {
+      try {
+        await updateNote(selectedNoteId, {
+          title: editNote.title,
+          content: editNote.content,
+          tags: editNote.tags,
+        });
+        setIsEditing(false);
+        setEditNote(null);
+      } catch (error) {
+        console.error("Error updating note:", error);
+      }
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    setEditNote(null);
   };
 
   // ========== COMPUTED VALUES ==========
@@ -235,7 +269,10 @@ function Search() {
                 }}
               />
             </div>
-            <button className={styles.settingsButton}>
+            <button 
+              className={styles.settingsButton}
+              onClick={() => navigate("/settings")}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -305,7 +342,15 @@ function Search() {
                 onCancel={handleCancelCreate}
               />
             ) : (
-              <NoteDetail note={selectedNote} />
+              <NoteDetail
+                note={selectedNote}
+                isEditing={isEditing}
+                editNote={editNote}
+                setEditNote={setEditNote}
+                onSave={handleSaveEdit}
+                onCancel={handleCancelEdit}
+                onStartEdit={handleStartEdit}
+              />
             )}
           </div>
           <div className={styles.actionButtonsContainer}>

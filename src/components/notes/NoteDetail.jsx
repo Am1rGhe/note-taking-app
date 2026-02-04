@@ -9,7 +9,20 @@ function NoteDetail({ note, isEditing = false, editNote, setEditNote, onSave, on
     );
   }
 
-  // Format content to preserve line breaks
+  const formatDate = (dateString) => {
+    if (!dateString) return "Unknown";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   const formattedContent = note.content
     ? note.content.split("\n").map((line, index) => (
         <span key={index}>
@@ -106,7 +119,7 @@ function NoteDetail({ note, isEditing = false, editNote, setEditNote, onSave, on
            <p>Last edited </p>
          </div>
         <span className={styles.metadataItem}>
-          {note.date || note.lastEdited || "Unknown"}
+          {formatDate(note.date || note.lastEdited)}
         </span>
       </div>
 

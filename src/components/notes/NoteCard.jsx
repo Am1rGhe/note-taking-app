@@ -3,6 +3,20 @@ import styles from "./notes.module.css";
 function NoteCard({ note, onClick, isSelected }) {
   if (!note) return null;
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+    } catch {
+      return dateString;
+    }
+  };
+
   const handleClick = () => {
     if (onClick) {
       onClick(note);
@@ -26,7 +40,7 @@ function NoteCard({ note, onClick, isSelected }) {
           <span>No tags</span>
         )}
       </div>
-      <p className={styles.noteDate}>{note.date || note.lastEdited}</p>
+      <p className={styles.noteDate}>{formatDate(note.date || note.lastEdited)}</p>
     </div>
   );
 }
