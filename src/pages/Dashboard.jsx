@@ -7,11 +7,17 @@ import NoteCard from "../components/notes/NoteCard";
 import NoteDetail from "../components/notes/NoteDetail";
 import notesStyles from "../components/notes/notes.module.css";
 import Sidebar from "../components/notes/Sidebar";
-import { mockNotes } from "../data/mockNotes";
+import { useNotes } from "../contexts/NotesContext";
 import styles from "./dashboard.module.css";
 
 function Dashboard() {
-  const [notes, setNotes] = useState(mockNotes);
+  const {
+    notes,
+    createNote: createNoteInDB,
+    updateNote: updateNoteInDB,
+    deleteNote: deleteNoteInDB,
+    archiveNote: archiveNoteInDB,
+  } = useNotes();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
@@ -57,25 +63,23 @@ function Dashboard() {
     setSelectedNoteId("creating");
   };
 
-  const handleSaveNote = () => {
-    const noteId = Date.now();
-    const finalNote = {
-      id: noteId,
-      title: newNote.title || "Untitled Note",
-      content: newNote.content,
-      tags: newNote.tags,
-      archived: newNote.archived,
-      date: new Date().toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "short",
-        year: "numeric",
-      }),
-    };
-
-    setNotes([...notes, finalNote]);
-    setIsCreating(false);
-    setSelectedNoteId(noteId);
-    setNewNote({ title: "", content: "", tags: [], archived: false });
+  const handleSaveNote = async () => {
+    try {
+      const createdNote = await createNoteInDB({
+        title: newNote.title || 'Untitled Note',
+        content: newNote.content,
+        tags: newNote.tags,
+        archived: false,
+      });
+      setIsCreating(false);
+      setNewNote({ title: '', content: '', tags: [], archived: false });
+      // Select the newly created note
+      if (createdNote) {
+        setSelectedNoteId(createdNote.id);
+      }
+    } catch (error) {
+      console.error('Error creating note:', error);
+    }
   };
 
   const handleCancelCreate = () => {
@@ -99,18 +103,22 @@ function Dashboard() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedNoteId) {
-      setNotes(notes.filter((note) => note.id !== selectedNoteId));
-      setIsDeleteModalOpen(false);
-      // Select the first available note or set to null
-      const remainingNotes = sortedActiveNotes.filter(
-        (note) => note.id !== selectedNoteId
-      );
-      if (remainingNotes.length > 0) {
-        setSelectedNoteId(remainingNotes[0].id);
-      } else {
-        setSelectedNoteId(null);
+      try {
+        await deleteNoteInDB(selectedNoteId);
+        setIsDeleteModalOpen(false);
+        // Select the first available note or set to null
+        const remainingNotes = sortedActiveNotes.filter(
+          (note) => note.id !== selectedNoteId
+        );
+        if (remainingNotes.length > 0) {
+          setSelectedNoteId(remainingNotes[0].id);
+        } else {
+          setSelectedNoteId(null);
+        }
+      } catch (error) {
+        console.error('Error deleting note:', error);
       }
     }
   };
@@ -123,22 +131,22 @@ function Dashboard() {
     setIsArchiveModalOpen(true);
   };
 
-  const handleArchiveConfirm = () => {
+  const handleArchiveConfirm = async () => {
     if (selectedNoteId) {
-      setNotes(
-        notes.map((note) =>
-          note.id === selectedNoteId ? { ...note, archived: true } : note
-        )
-      );
-      setIsArchiveModalOpen(false);
-      // Auto-select next note
-      const remainingNotes = sortedActiveNotes.filter(
-        (note) => note.id !== selectedNoteId
-      );
-      if (remainingNotes.length > 0) {
-        setSelectedNoteId(remainingNotes[0].id);
-      } else {
-        setSelectedNoteId(null);
+      try {
+        await archiveNoteInDB(selectedNoteId);
+        setIsArchiveModalOpen(false);
+        // Auto-select next note
+        const remainingNotes = sortedActiveNotes.filter(
+          (note) => note.id !== selectedNoteId
+        );
+        if (remainingNotes.length > 0) {
+          setSelectedNoteId(remainingNotes[0].id);
+        } else {
+          setSelectedNoteId(null);
+        }
+      } catch (error) {
+        console.error('Error archiving note:', error);
       }
     }
   };
@@ -154,24 +162,19 @@ function Dashboard() {
     }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editNote && selectedNoteId) {
-      setNotes(
-        notes.map((note) =>
-          note.id === selectedNoteId
-            ? {
-                ...editNote,
-                date: new Date().toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                }),
-              }
-            : note
-        )
-      );
-      setIsEditing(false);
-      setEditNote(null);
+      try {
+        await updateNoteInDB(selectedNoteId, {
+          title: editNote.title,
+          content: editNote.content,
+          tags: editNote.tags,
+        });
+        setIsEditing(false);
+        setEditNote(null);
+      } catch (error) {
+        console.error('Error updating note:', error);
+      }
     }
   };
 
@@ -293,7 +296,7 @@ function Dashboard() {
                 onCancel={handleCancelCreate}
               />
             ) : (
-              <NoteDetail 
+              <NoteDetail
                 note={selectedNote}
                 isEditing={isEditing}
                 editNote={editNote}
