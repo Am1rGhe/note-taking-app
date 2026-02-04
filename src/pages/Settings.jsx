@@ -5,10 +5,11 @@ import styles from "./dashboard.module.css";
 import settingsStyles from "./settings.module.css";
 import { useAuth } from "../contexts/AuthContext";
 import { supabase } from "../lib/supabase";
+import LogoutConfirmationModal from "../components/modals/LogoutConfirmationModal";
 
 function Settings() {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [searchInput, setSearchInput] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedColorTheme, setSelectedColorTheme] = useState("light");
@@ -22,6 +23,7 @@ function Settings() {
   const [passwordError, setPasswordError] = useState("");
   const [passwordSuccess, setPasswordSuccess] = useState("");
   const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   // Get active setting from URL, default to "colorTheme"
   const activeSetting = searchParams.get("tab") || "colorTheme";
 
@@ -34,6 +36,18 @@ function Settings() {
 
   const handleSettingChange = (settingId) => {
     setSearchParams({ tab: settingId });
+  };
+
+  const applyFontTheme = (fontTheme) => {
+    const fontMap = {
+      "sans-serif": '"Inter", sans-serif',
+      "serif": '"Georgia", "Times New Roman", serif',
+      "monospace": '"Courier New", "Monaco", monospace'
+    };
+
+    const fontFamily = fontMap[fontTheme] || fontMap["sans-serif"];
+    document.documentElement.style.setProperty("--app-font-family", fontFamily);
+    localStorage.setItem("fontTheme", fontTheme);
   };
 
   const handleSavePassword = async () => {
@@ -108,6 +122,23 @@ function Settings() {
     } finally {
       setIsUpdatingPassword(false);
     }
+  };
+
+  const handleLogoutClick = () => {
+    setIsLogoutModalOpen(true);
+  };
+
+  const handleLogoutConfirm = async () => {
+    try {
+      await signOut();
+      navigate("/login");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  const handleLogoutCancel = () => {
+    setIsLogoutModalOpen(false);
   };
 
   // Set default tab to "colorTheme" if no tab in URL
@@ -369,7 +400,7 @@ function Settings() {
             <div className={settingsStyles.separator}></div>
 
             {/* Logout Button */}
-            <button className={settingsStyles.logoutButton}>
+            <button className={settingsStyles.logoutButton} onClick={handleLogoutClick}>
               <span className={settingsStyles.menuItemIcon}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -676,7 +707,10 @@ function Settings() {
                   </label>
                 </div>
 
-                <button className={settingsStyles.applyButton}>
+                <button 
+                  className={settingsStyles.applyButton}
+                  onClick={() => applyFontTheme(selectedFontTheme)}
+                >
                   Apply Changes
                 </button>
               </div>
@@ -923,6 +957,11 @@ function Settings() {
           <div className={settingsStyles.settingsActions}></div>
         </div>
       </div>
+      <LogoutConfirmationModal
+        isOpen={isLogoutModalOpen}
+        onClose={handleLogoutCancel}
+        onConfirm={handleLogoutConfirm}
+      />
     </div>
   );
 }

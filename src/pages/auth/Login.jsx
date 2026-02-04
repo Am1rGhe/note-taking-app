@@ -1,11 +1,12 @@
 import { useState } from "react";
 import styles from "./auth.module.css";
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function Login() {
   const { signIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,7 +21,8 @@ function Login() {
     setLoading(true);
     try{
       await signIn(email,password);
-      navigate('/dashboard');
+      const from = location.state?.from?.pathname || '/dashboard';
+      navigate(from, { replace: true });
     }catch(err){
       setError(err.message || 'Failed to login');
     }finally{
