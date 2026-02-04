@@ -2,24 +2,22 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import NoteCard from "../components/notes/NoteCard";
 import Sidebar from "../components/notes/Sidebar";
-import { mockNotes } from "../data/mockNotes";
 import styles from "./dashboard.module.css";
 import NoteDetail from "../components/notes/NoteDetail";
 import notesStyles from "../components/notes/notes.module.css";
 import CreateNoteForm from "../components/notes/CreateNoteForm";
 import DeleteConfirmationModal from "../components/modals/DeleteConfirmationModal";
 import RestoreConfirmationModal from "../components/modals/RestoreConfirmationModal";
+import { useNotes } from "../contexts/NotesContext";
 
 function ArchivedNotes() {
-  const [notes, setNotes] = useState(mockNotes);
+  const { notes, createNote: createNoteInDB, updateNote: updateNoteInDB, deleteNote: deleteNoteInDB, restoreNote: restoreNoteInDB } = useNotes();
   const location = useLocation();
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
   const isArchivedPage = location.pathname === '/archived';
   
-  // Filter to show only archived notes
   const archivedNotes = notes.filter(note => note.archived);
-  // Sort so latest created note (highest id) appears first
   const sortedArchivedNotes = [...archivedNotes].sort((a, b) => b.id - a.id);
   
   const [selectedNoteId, setSelectedNoteId] = useState(
@@ -56,25 +54,22 @@ function ArchivedNotes() {
     setSelectedNoteId('creating');
   };
 
-  const handleSaveNote = () => {
-    const noteId = Date.now();
-    const finalNote = {
-      id: noteId,
-      title: newNote.title || 'Untitled Note',
-      content: newNote.content,
-      tags: newNote.tags,
-      archived: newNote.archived,
-      date: new Date().toLocaleDateString('en-GB', { 
-        day: 'numeric', 
-        month: 'short', 
-        year: 'numeric' 
-      })
-    };
-
-    setNotes([...notes, finalNote]);
-    setIsCreating(false);
-    setSelectedNoteId(noteId);
-    setNewNote({ title: '', content: '', tags: [], archived: true });
+  const handleSaveNote = async () => {
+    try {
+      const createdNote = await createNoteInDB({
+        title: newNote.title || 'Untitled Note',
+        content: newNote.content,
+        tags: newNote.tags,
+        archived: true,
+      });
+      setIsCreating(false);
+      setNewNote({ title: '', content: '', tags: [], archived: true });
+      if (createdNote) {
+        setSelectedNoteId(createdNote.id);
+      }
+    } catch (error) {
+      console.error('Error creating note:', error);
+    }
   };
 
   const handleCancelCreate = () => {
@@ -98,17 +93,21 @@ function ArchivedNotes() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleDeleteConfirm = async () => {
     if (selectedNoteId) {
-      setNotes(notes.filter((note) => note.id !== selectedNoteId));
-      setIsDeleteModalOpen(false);
-      const remainingNotes = sortedArchivedNotes.filter(
-        (note) => note.id !== selectedNoteId
-      );
-      if (remainingNotes.length > 0) {
-        setSelectedNoteId(remainingNotes[0].id);
-      } else {
-        setSelectedNoteId(null);
+      try {
+        await deleteNoteInDB(selectedNoteId);
+        setIsDeleteModalOpen(false);
+        const remainingNotes = sortedArchivedNotes.filter(
+          (note) => note.id !== selectedNoteId
+        );
+        if (remainingNotes.length > 0) {
+          setSelectedNoteId(remainingNotes[0].id);
+        } else {
+          setSelectedNoteId(null);
+        }
+      } catch (error) {
+        console.error('Error deleting note:', error);
       }
     }
   };
@@ -121,22 +120,21 @@ function ArchivedNotes() {
     setIsRestoreModalOpen(true);
   };
 
-  const handleRestoreConfirm = () => {
+  const handleRestoreConfirm = async () => {
     if (selectedNoteId) {
-      setNotes(
-        notes.map((note) =>
-          note.id === selectedNoteId ? { ...note, archived: false } : note
-        )
-      );
-      setIsRestoreModalOpen(false);
-      // Auto-select next note
-      const remainingNotes = sortedArchivedNotes.filter(
-        (note) => note.id !== selectedNoteId
-      );
-      if (remainingNotes.length > 0) {
-        setSelectedNoteId(remainingNotes[0].id);
-      } else {
-        setSelectedNoteId(null);
+      try {
+        await restoreNoteInDB(selectedNoteId);
+        setIsRestoreModalOpen(false);
+        const remainingNotes = sortedArchivedNotes.filter(
+          (note) => note.id !== selectedNoteId
+        );
+        if (remainingNotes.length > 0) {
+          setSelectedNoteId(remainingNotes[0].id);
+        } else {
+          setSelectedNoteId(null);
+        }
+      } catch (error) {
+        console.error('Error restoring note:', error);
       }
     }
   };
@@ -152,24 +150,19 @@ function ArchivedNotes() {
     }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     if (editNote && selectedNoteId) {
-      setNotes(
-        notes.map((note) =>
-          note.id === selectedNoteId
-            ? {
-                ...editNote,
-                date: new Date().toLocaleDateString("en-GB", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                }),
-              }
-            : note
-        )
-      );
-      setIsEditing(false);
-      setEditNote(null);
+      try {
+        await updateNoteInDB(selectedNoteId, {
+          title: editNote.title,
+          content: editNote.content,
+          tags: editNote.tags,
+        });
+        setIsEditing(false);
+        setEditNote(null);
+      } catch (error) {
+        console.error('Error updating note:', error);
+      }
     }
   };
 
@@ -184,7 +177,6 @@ function ArchivedNotes() {
     <div className={styles.mainContainer}>
       <Sidebar className={styles.sidebar} />
       <div className={styles.rightSide}>
-        {/* header  */}
         <div className={styles.header}>
           <h2 className={styles.headerTitle}>Archived Notes</h2>
           <div className={styles.headerRight}>
@@ -254,7 +246,7 @@ function ArchivedNotes() {
             {isCreating && (
               <div
                 className={`${notesStyles.noteCard} ${notesStyles.selected}`}
-                onClick={() => {}} // Prevent click when creating
+                onClick={() => {}}
               >
                 <h3 className={notesStyles.noteTitle}>Untitled Note</h3>
               </div>
