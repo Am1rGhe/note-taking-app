@@ -1,15 +1,31 @@
 import { useState } from "react";
 import styles from "./auth.module.css";
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
+  const { signIn } = useAuth();
+  const navigate = useNavigate();
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-
-    console.log("Email:", email, "Password:", password);
+    setError('');
+    setLoading(true);
+    try{
+      await signIn(email,password);
+      navigate('/dashboard');
+    }catch(err){
+      setError(err.message || 'Failed to login');
+    }finally{
+      setLoading(false);
+    }
   };
 
   return (
@@ -52,6 +68,11 @@ function Login() {
           <p>Please log in to continue</p>
         </div>
         <form className={styles.form} onSubmit={handleSubmit}>
+          {error && (
+            <div style={{ color: 'red', marginBottom: '16px', padding: '12px', backgroundColor: '#fee', borderRadius: '8px' }}>
+              {error}
+            </div>
+          )}
           <div className={styles.inputGroup}>
             <label className={styles.label} htmlFor="email">
               Email Address
@@ -136,8 +157,12 @@ function Login() {
               </button>
             </div>
           </div>
-          <button type="submit" className={styles.button}>
-            Login
+          <button 
+            type="submit" 
+            className={styles.button}
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </form>
         <hr className={styles.separator} />
