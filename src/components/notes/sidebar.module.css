@@ -145,3 +145,52 @@
   background-color: #ebf1ff;
   color: #3356ff;
 }
+
+@media (max-width: 1024px) {
+  .logoContainer {
+    padding: 10px 12px;
+  }
+
+  .logoContainer svg {
+    width: 85px;
+    height: 25px;
+  }
+
+  .navMenu {
+    padding: 0 12px;
+  }
+
+  .tagsSection {
+    padding: 0 12px;
+  }
+}
+
+@media (max-width: 767px) {
+  .logoContainer {
+    padding: 16px;
+    border-bottom: 1px solid #E0E4EA;
+  }
+
+  .navMenu {
+    padding: 8px 16px;
+    margin-bottom: 12px;
+  }
+
+  .navLink {
+    padding: 10px 12px;
+    font: 500 13px/1.2 "Inter", sans-serif;
+  }
+
+  .tagsSection {
+    padding: 0 16px;
+  }
+
+  .tagsTitle {
+    font: 500 14px/1.2 "Inter", sans-serif;
+  }
+
+  .tagButton {
+    padding: 6px 8px;
+    font: 400 13px/1.2 "Inter", sans-serif;
+  }
+}
