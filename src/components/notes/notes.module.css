@@ -406,4 +406,152 @@
   color: #717784;
 }
 
+@media (max-width: 1024px) {
+  .noteCard {
+    padding: 10px;
+    max-height: 220px;
+  }
+
+  .noteTitle {
+    font: 600 15px/1.2 "Inter", sans-serif;
+  }
+
+  .detailsContainer {
+    padding: 16px 20px;
+  }
+
+  .detailTitle {
+    font: 700 22px/1.2 "Inter", sans-serif;
+  }
+
+  .archiveDeleteButtonsContainer {
+    padding: 12px 16px 0 16px;
+  }
+}
+
+@media (max-width: 767px) {
+  .noteCard {
+    padding: 12px;
+    max-height: 180px;
+    gap: 8px;
+  }
+
+  .noteTitle {
+    font: 600 14px/1.2 "Inter", sans-serif;
+    letter-spacing: -0.2px;
+  }
+
+  .noteTags {
+    gap: 6px;
+  }
+
+  .tag {
+    padding: 2px 5px;
+    font: 400 11px/1.2 "Inter", sans-serif;
+  }
+
+  .noteDate {
+    font: 400 11px/1.2 "Inter", sans-serif;
+  }
+
+  .detailsContainer {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .detailHeader {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .detailTitle {
+    font: 700 20px/1.2 "Inter", sans-serif;
+    width: 100%;
+  }
+
+  .detailMetadata {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .metadataIcon {
+    width: 100%;
+  }
+
+  .contentText {
+    font: 400 13px/1.5 "Inter", sans-serif;
+  }
+
+  .detailActions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .saveButton,
+  .cancelButton {
+    width: 100%;
+    padding: 10px 20px;
+    font: 600 13px/1.2 "Inter", sans-serif;
+  }
+
+  .archiveDeleteButtonsContainer {
+    flex-direction: row;
+    padding: 12px;
+    gap: 8px;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #FFFFFF;
+    border-top: 1px solid #E0E4EA;
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.05);
+    z-index: 100;
+  }
+
+  .archiveDeleteButton {
+    flex: 1;
+    padding: 10px 12px;
+    font: 500 13px/1.2 "Inter", sans-serif;
+    justify-content: center;
+  }
+
+  .createTitleInput {
+    font: 700 20px/1.2 "Inter", sans-serif;
+  }
+
+  .createContentTextarea {
+    min-height: 250px;
+    font: 400 13px/1.5 "Inter", sans-serif;
+  }
+
+  .createTagsInput {
+    padding: 10px 14px;
+    font: 400 13px/1.2 "Inter", sans-serif;
+  }
+}
+
+@media (max-width: 480px) {
+  .noteCard {
+    padding: 10px;
+    max-height: 160px;
+  }
+
+  .detailsContainer {
+    padding: 12px;
+  }
+
+  .detailTitle {
+    font: 700 18px/1.2 "Inter", sans-serif;
+  }
+
+  .createTitleInput {
+    font: 700 18px/1.2 "Inter", sans-serif;
+  }
+
+  .createContentTextarea {
+    min-height: 200px;
+  }
+}
+
 
