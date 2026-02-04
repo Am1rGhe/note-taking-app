@@ -173,6 +173,10 @@
   height: 24px;
 }
 
+.menuButton {
+  display: none;
+}
+
 /* Content Container - Bottom Row (Grid for content) */
 .contentContainer {
   grid-row: 2;
@@ -238,5 +242,164 @@
   letter-spacing: -0.2px;
   font: 400 14px/1.2 "Inter", sans-serif;
   color: #0E121B;
+}
+
+@media (max-width: 1024px) {
+  .mainContainer {
+    grid-template-columns: 240px 1fr;
+  }
+
+  .contentContainer {
+    grid-template-columns: 1fr 1.5fr 0.8fr;
+  }
+
+  .headerTitle {
+    font: 700 28px/1.2 "Inter", sans-serif;
+  }
+
+  .searchWrapper {
+    max-width: 300px;
+  }
+
+  .notesList {
+    padding: 16px 12px 16px 24px;
+  }
+}
+
+/* Mobile styles (up to 767px) */
+@media (max-width: 767px) {
+  .mainContainer {
+    grid-template-columns: 1fr;
+    position: relative;
+  }
+
+  .sidebar {
+    position: fixed;
+    left: -100%;
+    top: 0;
+    width: 280px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+
+  .menuButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: 1px solid #CACFD8;
+    border-radius: 8px;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .menuButton:hover {
+    background-color: #F3F5F8;
+    border-color: #9CA3AF;
+  }
+
+  .menuButton svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+  }
+
+  .overlay.open {
+    display: block;
+  }
+
+  .rightSide {
+    grid-column: 1;
+    width: 100%;
+  }
+
+  .header {
+    padding: 12px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .headerTitle {
+    font: 700 24px/1.2 "Inter", sans-serif;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .headerRight {
+    width: 100%;
+    order: 3;
+    margin-top: 8px;
+  }
+
+  .searchWrapper {
+    max-width: none;
+    flex: 1;
+  }
+
+  .contentContainer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .notesList {
+    grid-row: 1;
+    padding: 12px;
+    border-right: none;
+    border-bottom: 1px solid #E0E4EA;
+    max-height: 40vh;
+    min-height: 200px;
+  }
+
+  .actionButtonsContainer {
+    display: none;
+  }
+
+  .createNoteButton {
+    padding: 10px 20px;
+    font: 600 13px/1.2 "Inter", sans-serif;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 10px;
+  }
+
+  .headerTitle {
+    font: 700 20px/1.2 "Inter", sans-serif;
+  }
+
+  .searchInput {
+    padding: 10px 14px 10px 44px;
+    font: 400 13px/1.2 "Inter", sans-serif;
+  }
+
+  .notesList {
+    padding: 10px;
+    max-height: 35vh;
+  }
 }
 
