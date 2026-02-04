@@ -1,0 +1,128 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modalContent {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.modalIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #FEF3C7;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.modalIcon svg {
+  width: 24px;
+  height: 24px;
+}
+
+.modalTitle {
+  font: 700 20px/1.2 "Inter", sans-serif;
+  color: #0E121B;
+  margin: 0;
+  padding: 0;
+  letter-spacing: -0.5px;
+}
+
+.modalMessage {
+  font: 400 14px/1.5 "Inter", sans-serif;
+  color: #717784;
+  margin: 0 0 24px 0;
+  padding: 0;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  padding: 10px 20px;
+  background-color: #FFFFFF;
+  color: #0E121B;
+  border: 1px solid #E0E4EA;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cancelButton:hover {
+  background-color: #F9FAFB;
+  border-color: #CACFD8;
+}
+
+.cancelButton:active {
+  background-color: #F3F5F8;
+}
+
+.logoutButton {
+  padding: 10px 20px;
+  background-color: #3356FF;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font: 600 14px/1.2 "Inter", sans-serif;
+  letter-spacing: -0.2px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.logoutButton:hover {
+  background-color: #2547D0;
+}
+
+.logoutButton:active {
+  background-color: #1E3A9F;
+}
