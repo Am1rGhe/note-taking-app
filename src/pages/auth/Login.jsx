@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./auth.module.css";
 import { useAuth } from '../../contexts/AuthContext';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 
 function Login() {
   const { signIn } = useAuth();
@@ -193,7 +193,7 @@ function Login() {
           <hr className={styles.separator} />
         </div>
         <div className={styles.authRedirect}>
-          No account yet? <a href="/signup">Sign Up</a>
+          No account yet? <Link to="/signup">Sign Up</Link>
         </div>
       </div>
     </div>

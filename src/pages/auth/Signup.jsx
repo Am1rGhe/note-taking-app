@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./auth.module.css";
 import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup() {
   const [email, setEmail] = useState("");
@@ -210,7 +210,7 @@ function Signup() {
           <hr className={styles.separator} />
         </div>
         <div className={styles.authRedirect}>
-          Already have an account? <a href="/login">Login</a>
+          Already have an account? <Link to="/login">Login</Link>
         </div>
       </div>
     </div>
